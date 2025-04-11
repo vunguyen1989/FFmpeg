@@ -63,3 +63,36 @@ docclean:: examplesclean
 -include $(wildcard $(EXAMPLES:%$(PROGSSUF)$(EXESUF)=%.d))
 
 .PHONY: examples
+
+hello_world:
+	gcc -g -I/usr/local/include 0_hello_world.c \
+	/usr/local/lib/libavformat.a \
+	/usr/local/lib/libavcodec.a \
+	/usr/local/lib/libavdevice.a \
+	/usr/local/lib/libavfilter.a \
+	/usr/local/lib/libswresample.a \
+	/usr/local/lib/libswscale.a \
+	/usr/local/lib/libavutil.a \
+	-o hello_world -lpthread -lz -lbz2 -lm
+
+remux:
+	gcc -g -I/usr/local/include 2_remuxing.c \
+	/usr/local/lib/libavformat.a \
+	/usr/local/lib/libavcodec.a \
+	/usr/local/lib/libavdevice.a \
+	/usr/local/lib/libavfilter.a \
+	/usr/local/lib/libswresample.a \
+	/usr/local/lib/libswscale.a \
+	/usr/local/lib/libavutil.a \
+	-o remux -lpthread -lz -lbz2 -lm
+
+transcoding:
+	gcc -g -I/usr/local/include 3_transcoding.c video_debugging.c \
+	/usr/local/lib/libavformat.a \
+	/usr/local/lib/libavcodec.a \
+	/usr/local/lib/libavdevice.a \
+	/usr/local/lib/libavfilter.a \
+	/usr/local/lib/libswresample.a \
+	/usr/local/lib/libswscale.a \
+	/usr/local/lib/libavutil.a \
+	-o 3_transcoding -lpthread -lz -lbz2 -lm

@@ -22,7 +22,15 @@ RUN apt-get update && apt-get install -y \
     libopus-dev \
     libfdk-aac-dev \
     zlib1g-dev \
+    gdb \
+    lldb \
+    valgrind \
+    strace \
+    ltrace \
+    vim \
+    libbz2-dev \
     && apt-get clean
+
 
 # Set working directory
 WORKDIR /workspace

@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch FFmpeg",
+            "type": "cppdbg",
+            "request": "launch",
+
+            // "program": "/workspace/ffmpeg_g",  // Path to compiled FFmpeg binary
+            // "args": ["-i", "input.mp4", "-c:v", "libx264", "output.mp4"], // Example args
+            // "args": ["-i", "input.mp4", "-c", "copy", "output.mkv"], // Example args
+
+            //remux
+            "program": "/workspace/doc/examples/remux",
+            "args": ["/workspace/fftools/small_bunny_1080p_60fps.mp4", "/workspace/fftools/output_test.ts"],
+            
+            "stopAtEntry": false,
+            "cwd": "/workspace",
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/usr/local/lib"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                { "text": "-enable-pretty-printing", "description": "Enable pretty printing", "ignoreFailures": true }
+            ]
+        }
+    ]
+}
