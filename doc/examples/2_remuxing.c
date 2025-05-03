@@ -1,3 +1,79 @@
+// flow chart 
+// +--------------------+
+// |  Nhập tham số CLI |
+// |  (input & output) |
+// +--------+-----------+
+//          |
+//          v
+// +-----------------------------+
+// | avformat_open_input()      |
+// | Mở file đầu vào            |
+// +-----------------------------+
+//          |
+//          v
+// +-----------------------------+
+// | avformat_find_stream_info()|
+// | Lấy thông tin stream đầu vào|
+// +-----------------------------+
+//          |
+//          v
+// +-----------------------------+
+// | avformat_alloc_output_...  |
+// | Tạo context đầu ra          |
+// +-----------------------------+
+//          |
+//          v
+// +------------------------------+
+// | Lặp qua các stream đầu vào  |
+// | -> Chọn audio/video/subtitle|
+// | -> Tạo stream đầu ra mới    |
+// | -> Copy codec parameters    |
+// +------------------------------+
+//          |
+//          v
+// +-----------------------------+
+// | avio_open()                |
+// | Mở file đầu ra (nếu cần)   |
+// +-----------------------------+
+//          |
+//          v
+// +-----------------------------+
+// | avformat_write_header()    |
+// | Ghi header file đầu ra     |
+// +-----------------------------+
+//          |
+//          v
+// +-----------------------------+
+// | Vòng lặp đọc packet        |
+// | av_read_frame()            |
+// +-------------+---------------+
+//               |
+//               v
+// +-----------------------------+
+// | Lọc và chỉnh sửa timestamp |
+// | av_rescale_q_rnd           |
+// +-----------------------------+
+//               |
+//               v
+// +-----------------------------+
+// | av_interleaved_write_frame |
+// | Ghi packet ra file         |
+// +-----------------------------+
+//               |
+//               v
+// +-----------------------------+
+// | av_write_trailer()         |
+// | Ghi trailer kết thúc file  |
+// +-----------------------------+
+//               |
+//               v
+// +-----------------------------+
+// | Dọn dẹp bộ nhớ & đóng file |
+// | avformat_close_input       |
+// | avio_closep                |
+// | avformat_free_context      |
+// +-----------------------------+
+
 // based on https://ffmpeg.org/doxygen/trunk/remuxing_8c-example.html
 #include <libavutil/timestamp.h>
 #include <libavformat/avformat.h>
