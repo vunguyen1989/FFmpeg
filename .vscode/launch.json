@@ -6,14 +6,21 @@
             "type": "cppdbg",
             "request": "launch",
 
-            // "program": "/workspace/ffmpeg_g",  // Path to compiled FFmpeg binary
-            // "args": ["-i", "input.mp4", "-c:v", "libx264", "output.mp4"], // Example args
+            // FFMPEG
+            "program": "/workspace/ffmpeg_g",  // Path to compiled FFmpeg binary
+            // "args": ["-i", "input.mp4", "-c:v", "libx264", "output_h264.mp4"], // Example args
             // "args": ["-i", "input.mp4", "-c", "copy", "output.mkv"], // Example args
+            "args": ["-threads","1","-i", "input.mp4", "-c:v", "mpeg4", "-q:v", "5", "-c:a", "copy", "output_mpeg4.avi"], // Example args
 
             //remux
-            "program": "/workspace/doc/examples/remux",
-            "args": ["/workspace/fftools/small_bunny_1080p_60fps.mp4", "/workspace/fftools/output_test.ts"],
+            // "program": "/workspace/doc/examples/remux",
+            // "args": ["/workspace/fftools/small_bunny_1080p_60fps.mp4", "/workspace/fftools/output_test.ts"],
             
+            //transcode
+            // "program": "/workspace/doc/examples/3_transcoding",
+            // "args": ["input.mp4", "output.mp4"],
+
+
             "stopAtEntry": false,
             "cwd": "/workspace",
             "environment": [
