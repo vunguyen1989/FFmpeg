@@ -99,11 +99,16 @@ transcoding:
 
 transcode:
 	gcc -g -I/usr/local/include transcode.c \
-	/usr/local/lib/libavformat.a \
-	/usr/local/lib/libavcodec.a \
-	/usr/local/lib/libavdevice.a \
-	/usr/local/lib/libavfilter.a \
-	/usr/local/lib/libswresample.a \
-	/usr/local/lib/libswscale.a \
-	/usr/local/lib/libavutil.a \
-	-o transcode -lpthread -lz -lbz2 -lm
+  	-Wl,--start-group \
+  	/usr/local/lib/libavformat.a \
+  	/usr/local/lib/libavdevice.a \
+  	/usr/local/lib/libavfilter.a \
+  	/usr/local/lib/libavcodec.a \
+  	/usr/local/lib/libswresample.a \
+  	/usr/local/lib/libswscale.a \
+  	/usr/local/lib/libavutil.a \
+  	/usr/local/lib/libpostproc.a \
+  	/usr/local/lib/libfdk-aac.a \
+  	/usr/local/lib/libx264.a \
+  	-Wl,--end-group \
+  	-o transcode -lpthread -lz -lbz2 -lm
