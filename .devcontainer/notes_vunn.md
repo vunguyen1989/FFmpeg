@@ -1,25 +1,43 @@
-# 1 confige
-```
-./configure \
-  --prefix=/usr/local/ffmpeg \
-  --extra-cflags="-g -O0" \
-  --extra-ldflags="-g" \
-  --disable-optimizations \
-  --enable-debug \
-  --enable-static \
-  --disable-shared \
-  --enable-gpl \
-  --enable-nonfree \
-  --enable-libx264 \
-  --enable-libx265 \
-  --enable-libvpx \
-  --enable-libopus \
-  --enable-libfdk-aac \
-  --disable-doc
+# 1 fdk-aac
+    git clone --depth 1 https://github.com/mstorsjo/fdk-aac.git && \
+    cd fdk-aac && \
+    autoreconf -fiv && \
+    ./configure --disable-shared --enable-static CFLAGS="-g -O0" && \
+    make -j$(nproc) && make install
+
+# 2 x264
+    RUN git clone --depth 1 https://code.videolan.org/videolan/x264.git && \
+
+    cd x264 && \
+    ./configure --enable-static --disable-shared --enable-pic --enable-debug CFLAGS="-g -O0" && \
+    make -j$(nproc) && make install
+
+# 3 FFmpeg
+
+## 3.1 configure
+```    
+    ./configure \
+    --pkg-config-flags="--static" \
+    --extra-cflags="-g -O0 -I/usr/local/include" \
+    --extra-ldflags="-L/usr/local/lib" \
+    --extra-libs="-lpthread -lm" \
+    --disable-stripping \
+    --disable-optimizations \
+    --enable-libx264 \
+    --enable-libfdk-aac \
+    --disable-shared \
+    --enable-static \
+    --enable-debug \
+    --enable-gpl \
+    --enable-nonfree
+    --enable-postproc \
+    --enable-decoder=rawvideo \
+    --enable-filter=pp,spp &&\
+    make -j$(nproc) && make install
+
 ```
 
-# 2 install
-
+## 3.2 install    
 ```
-  make -j$(nproc)   
+    make -j$(nproc) && make install
 ```
