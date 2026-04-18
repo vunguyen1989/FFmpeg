@@ -73,6 +73,8 @@ hello_world:
 	/usr/local/lib/libswresample.a \
 	/usr/local/lib/libswscale.a \
 	/usr/local/lib/libavutil.a \
+	/usr/local/lib/libfdk-aac.a \
+	/usr/local/lib/libx264.a \
 	-o hello_world -lpthread -lz -lbz2 -lm
 
 remux:

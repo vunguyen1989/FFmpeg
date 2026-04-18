@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
     ltrace \
     vim \
     libbz2-dev \
+    libsdl1.2-dev \
     && apt-get clean
 
 

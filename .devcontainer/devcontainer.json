@@ -1,6 +1,6 @@
 {
     "name": "FFmpeg Development",
-    "containerName": "ffmpeg_dev",
+    "containerName": "FFmpeg",
     "context": ".",
     "dockerFile": "Dockerfile",
     "settings": {
