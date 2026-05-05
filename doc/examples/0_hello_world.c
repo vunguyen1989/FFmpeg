@@ -11,6 +11,77 @@
  * Frame - a decoded raw frame (to be encoded or filtered).
  */
 
+/*    DOCUMENT
+- usage
+  Compile:    gcc -o 0_hello_world 0_hello_world.c -lavcodec -lavformat -lavutil
+  Run:        ./0_hello_world <video_file>
+  Output:     frame-N.pgm files (grayscale images, first 8 video packets)
+
+- flow chart
+  +-------------------+
+  | avformat_alloc_context()         -- allocate AVFormatContext
+  +-------------------+
+            |
+            v
+  +-------------------+
+  | avformat_open_input()            -- open file, read header
+  +-------------------+
+            |
+            v
+  +-------------------+
+  | avformat_find_stream_info()      -- populate stream info
+  +-------------------+
+            |
+            v
+  +---------------------+
+  | for each stream:            -- iterate nb_streams
+  |   avcodec_find_decoder()     -- find codec by codec_id
+  |   collect video stream index, codec params
+  +---------------------+
+            |
+            v
+  +---------------------------+
+  | avcodec_alloc_context3()           -- allocate codec context
+  +---------------------------+
+            |
+            v
+  +-----------------------------------+
+  | avcodec_parameters_to_context()           -- copy codec params
+  +-----------------------------------+
+            |
+            v
+  +---------------------------+
+  | avcodec_open2()                    -- open codec
+  +---------------------------+
+            |
+            v
+  +-----------------------+
+  | av_frame_alloc()              -- allocate frame
+  | av_packet_alloc()             -- allocate packet
+  +-----------------------+
+            |
+            v
+  +---------------------------+
+  | while av_read_frame():           -- read packets
+  |   if video stream:
+  |     decode_packet():
+  |       avcodec_send_packet()     -- send packet to decoder
+  |       while avcodec_receive_frame():  -- receive frames
+  |         save_gray_frame()       -- write PGM file
+  +---------------------------+
+            |
+            v
+  +------------------------------+
+  | cleanup:                      -- avformat_close_input,
+  |   av_packet_free, av_frame_free,  avcodec_free_context
+  +------------------------------+
+
+- libs using
+  - libavformat  (avformat.h)    -- format/container: open, read header/streams
+  - libavcodec   (avcodec.h)     -- codec: find decoder, alloc context, open, send/receive
+  - libavutil    (avutil.h)      -- utilities: av_err2str, pix fmt constants
+*/
+
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <stdio.h>

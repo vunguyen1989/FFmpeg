@@ -6,11 +6,19 @@
             "type": "cppdbg",
             "request": "launch",
 
-            // FFMPEG
+            // 1. FFMPEG
             "program": "/workspace/ffmpeg_g",  // Path to compiled FFmpeg binary
+
             // "args": ["-i", "input.mp4", "-c:v", "libx264", "output_h264.mp4"], // Example args
             // "args": ["-i", "input.mp4", "-c", "copy", "output.mkv"], // Example args
-            "args": ["-threads","1","-i", "input.mp4", "-c:v", "mpeg4", "-q:v", "5", "-c:a", "copy", "output_mpeg4.avi"], // Example args
+            // "args": ["-threads","1","-i", "input.mp4", "-c:v", "mpeg4", "-q:v", "5", "-c:a", "copy", "output_mpeg4.avi"], // Example args
+            "args": ["-y", "-ss", "0", "-i", "input.mp4", "-t", "7", "-map", "0", "-c", "copy", "output_0-10.mp4"],
+
+
+            // 2. EXAMPLES
+            //0_hello_world.c
+            // "program": "/workspace/doc/examples/hello_world",
+            // "args": ["input.mp4"],
 
             //remux
             // "program": "/workspace/doc/examples/remux",

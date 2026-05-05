@@ -23,3 +23,5 @@
 /vaapi_encode
 /vaapi_transcode
 /qsv_transcode
+/hello_world
+*.DS_Store
