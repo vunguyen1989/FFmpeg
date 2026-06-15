@@ -646,4 +646,4 @@ typedef struct PacketQueue {
 
 ## Building & Compilation
 
-Xem [build_guide.md](build_guide.md) để biết chi tiết cách build FFmpeg static libraries và video player.
+Xem [macos_build_guide.md](macos_build_guide.md) để biết chi tiết cách build FFmpeg static libraries và video player.

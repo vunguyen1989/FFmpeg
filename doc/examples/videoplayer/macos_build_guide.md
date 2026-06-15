@@ -43,26 +43,10 @@ make -j$(sysctl -n hw.logicalcpu)
 ```
 
 **Lưu ý:**
-- Trên **Mac Intel**: dùng `/usr/local` thay vì `/opt/homebrew`
 - Trên **Mac M1/M2/M3**: dùng `/opt/homebrew`
 - Static libs sẽ nằm tại: `libavcodec/libavcodec.a`, `libavformat/libavformat.a`, `libavutil/libavutil.a`, `libswscale/libswscale.a`, `libswresample/libswresample.a`
 
 **Link với Video Player:**
-
-```bash
-# Từ thư mục doc/examples/videoplayer
-gcc -Wall -Wextra -Wno-deprecated-declarations -g -O0 \
-    -I../../libavutil -I../../libavcodec -I../../libavformat -I../../libswscale -I../../libswresample \
-    -I$(brew --prefix)/include/SDL2 \
-    -o player app.c \
-    ../../libavutil/libavutil.a \
-    ../../libavformat/libavformat.a \
-    ../../libavcodec/libavcodec.a \
-    ../../libswscale/libswscale.a \
-    ../../libswresample/libswresample.a \
-    -lm -lz -lpthread \
-    -L$(brew --prefix)/lib -lSDL2
-```
 
 ### Build trên macOS (với Homebrew)
 
@@ -70,10 +54,7 @@ gcc -Wall -Wextra -Wno-deprecated-declarations -g -O0 \
 # Cài đặt dependencies
 brew install sdl2
 
-# Build với Makefile
-cd lab
+# Trong videoplayer, uild với Makefile
 make build
 
-# Run
-./player.app ../Iron_Man-Trailer_HD.mp4 100
 ```
