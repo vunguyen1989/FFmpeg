@@ -429,14 +429,11 @@ av_seek_frame(format_ctx, stream_index, timestamp, flags);
 Main Loop: av_read_frame() → put audio packet vào queue
 Audio Callback: get packet → decode → resample → play
 ```
-```
 
 **Các điểm quan trọng:**
-- Dùng `avcodec_send_packet()` / `avcodec_receive_frame()` API mới của FFmpeg
+- Dùng `avcodec_send_packet()` / `avcodec_receive_frame()` API mới
 - Một packet có thể tạo nhiều frame → cần vòng while để drain hết
-- SDL yêu cầu texture YV12 (YUV420P) để hiển thị
-- `pFrame` chứa frame từ decoder (format tùy video gốc)
-- `pict` chứa buffer YUV420P cho SDL
+- SDL yêu cầu texture YV12 (YUV420P)
 
 ---
 
@@ -654,37 +651,60 @@ typedef struct PacketQueue {
 - **FFmpeg** (libavcodec, libavformat, libavutil, libswscale, libswresample)
 - **SDL2** or **SDL 1.2**
 - **CMake** 3.11+
-- **GCC/Clang**
+- **GCC**
 
-### Build với CMake
+
+### Build FFmpeg Static Libraries từ Source
+
+Để build FFmpeg static libraries (lib*.a) trực tiếp từ source và debug với VS Code:
 
 ```bash
-# Clone và cd vào repo
-cd ffmpeg-video-player
+# 1. Configure với static build
+./configure \
+    --pkg-config-flags="--static" \
+    --extra-cflags="-g -O0 -I/opt/homebrew/include" \
+    --extra-ldflags="-L/opt/homebrew/lib" \
+    --extra-libs="-lpthread -lm" \
+    --disable-stripping \
+    --disable-optimizations \
+    --enable-static \
+    --disable-shared \
+    --enable-debug \
+    --enable-gpl \
+    --enable-nonfree \
+    --enable-postproc
 
-# Tạo thư mục build
-cmake CMakeLists.txt -B build
-
-# Build tất cả
-cd build
-make
+# 2. Build static libraries (không cần make install)
+make -j$(nproc)
 ```
 
-### Build từng tutorial
+**Lưu ý:**
+- Trên **Mac Intel**: dùng `/usr/local` thay vì `/opt/homebrew`
+- Trên **Mac M1/M2/M3**: dùng `/opt/homebrew`
+- Static libs sẽ nằm tại: `libavcodec/libavcodec.a`, `libavformat/libavformat.a`, `libavutil/libavutil.a`, `libswscale/libswscale.a`, `libswresample/libswresample.a`
+
+**Link với Video Player:**
 
 ```bash
-cd tutorial01
-gcc -o tutorial01 tutorial01.c \
-    -lavutil -lavformat -lavcodec -lswscale -lz -lm
-
-./tutorial01 ../Iron_Man-Trailer_HD.mp4 200
+# Từ thư mục doc/examples/videoplayer
+gcc -Wall -Wextra -Wno-deprecated-declarations -g -O0 \
+    -I../../libavutil -I../../libavcodec -I../../libavformat -I../../libswscale -I../../libswresample \
+    -I$(brew --prefix)/include/SDL2 \
+    -o player app.c \
+    ../../libavutil/libavutil.a \
+    ../../libavformat/libavformat.a \
+    ../../libavcodec/libavcodec.a \
+    ../../libswscale/libswscale.a \
+    ../../libswresample/libswresample.a \
+    -lm -lz -lpthread \
+    -L$(brew --prefix)/lib -lSDL2
 ```
 
 ### Build trên macOS (với Homebrew)
 
 ```bash
 # Cài đặt dependencies
-brew install ffmpeg sdl2
+brew install sdl2
 
 # Build với Makefile
 cd lab
@@ -693,65 +713,3 @@ make build
 # Run
 ./player.app ../Iron_Man-Trailer_HD.mp4 100
 ```
-
-**Lưu ý:** FFmpeg 6.x và 8.x đã bỏ một số deprecated APIs:
-- `avcodec_close()` → dùng `avcodec_free_context()`
-- `pFrame->key_frame` → đã bị remove (FFmpeg 4.0+)
-- `pFrame->coded_picture_number` → đã bị remove
-- `pFrame->display_picture_number` → đã bị remove
-- `pCodecCtx->frame_number` → dùng `pCodecCtx->frame_num`
-
-Đã test với FFmpeg 6.1.5 (macOS Homebrew) và 7.0.2 (Linux).
-
-### Docker
-
-```bash
-# Build image
-docker build -t ffmpeg-video-player -f Dockerfile .
-
-# Run container
-docker run --gpus all --net host --privileged \
-    -itu ffmpeg -e NVIDIA_VISIBLE_DEVICES=all \
-    -e DISPLAY=$DISPLAY \
-    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
-    -v /path/to/media:/home/ffmpeg/media \
-    ffmpeg-video-player
-```
-
----
-
-## Troubleshooting
-
-### Screen Tearing
-
-Nếu gặp hiện tượng screen tearing (xé màn hình), có thể fix bằng cách thêm vào `/etc/X11/xorg.conf.d/20-intel.conf`:
-
-```ini
-Section "Device"
-    Identifier "Intel Graphics"
-    Driver "intel"
-    Option "TearFree" "true"
-EndSection
-```
-
-### NVIDIA Driver Issues
-
-Nếu gặp lỗi `Major opcode of failed request: 151 (GLX)`:
-- Kiểm tra xem có nvidia driver nhưng không có NVIDIA hardware
-- Gỡ `nvidia-340xx-utils` nếu không cần thiết
-
----
-
-## References
-
-- Original Tutorial: http://dranger.com/ffmpeg/
-- FFmpeg Documentation: https://ffmpeg.org/documentation.html
-- SDL Documentation: https://wiki.libsdl.org/
-
----
-
-## License
-
-GNU Lesser General Public License 2.1+ / GNU General Public License 2+
-
-Author: Rambod Rahmani <<rambodrahmani@autistici.org>>
