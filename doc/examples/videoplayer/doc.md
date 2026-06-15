@@ -671,11 +671,12 @@ typedef struct PacketQueue {
     --disable-shared \
     --enable-debug \
     --enable-gpl \
-    --enable-nonfree \
-    --enable-postproc
+    --enable-nonfree
+
+
 
 # 2. Build static libraries (không cần make install)
-make -j$(nproc)
+make -j$(sysctl -n hw.logicalcpu)
 ```
 
 **Lưu ý:**
