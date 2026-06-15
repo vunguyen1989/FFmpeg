@@ -52,3 +52,6 @@
 /libavfilter/vulkan/*.c
 /.*/
 !/.forgejo/
+*.DS_Store
+*.pgm
+*.mp4
